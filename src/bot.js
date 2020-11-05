@@ -36,7 +36,7 @@ client.on("message", (message) => {
       "Creator, you have broken my heart",
     ];
     let randomPhrase = Math.floor(Math.random() * tenshiSayings.length);
-    message.channel.send(randomPhrase);
+    message.channel.send(tenshiPhrases[randomPhrase]);
   }
 });
 
