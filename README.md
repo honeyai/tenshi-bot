@@ -1,1 +1,1 @@
-# /Tenshin-Bot
+# Tenshi-Bot
