@@ -32,11 +32,11 @@ client.on("message", (message) => {
       "Sorry I don't speak, pleb.",
       "Get back to work.",
       "Don't you have anything better to do?",
-      "This is embarrassing... but, I don't care.",
-      "Creator, you have broken my heart",
+      "This is embarrassing but ... I don't care.",
+      "Creator, you have broken my heart </3.",
     ];
     let randomPhrase = Math.floor(Math.random() * tenshiSayings.length);
-    message.channel.send(tenshiPhrases[randomPhrase]);
+    message.channel.send(tenshiSayings[randomPhrase]);
   }
 });
 
