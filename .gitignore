@@ -1,5 +1,8 @@
 #env
 .env
 
+#json
+/envDoesntWork.json
+
 #dependicies 
 /node_modules
