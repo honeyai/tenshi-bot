@@ -20,12 +20,13 @@ const botToken = require("../envDoesntWork.json").BOT_TOKEN;
 
 //to interact with the discord api
 const { Client } = require("discord.js");
-const client = new Client();
+const client = new Client({
+  partials: ['MESSAGE', 'REACTION']
+});
 
 const PREFIX = "$";
 
-//takes in the bot token to get the bot online
-client.login(botToken);
+
 
 //responding to actions taken in discord, ie. delete a message, sending a message, reactions
 
@@ -103,3 +104,32 @@ client.on("message", async (message) => {
     }
   }
 });
+
+
+client.on('messageReactionAdd', (reaction, user) => {
+  console.log("A reaction was done");
+  const { name } = reaction.emoji;
+  const member = reaction.message.guild.members.cache.get(user.id);
+  if (reaction.message.id === "774115551127011338") {
+    switch (name) {
+      case '🐱' : member.roles.add("774114942349475850"); 
+      break;
+    }
+  }
+});
+
+// client.on('messageReactionRemove', (reaction, user) => {
+//   const { name } = reaction.emoji;
+//   const member = reaction.message.guild.members.cache.get(user.id);
+//   if (reaction.message.id === "774115551127011338") {
+//     switch (name) {
+//       case '🐱' : 
+//       member.roles.remove("774114942349475850");
+//       break;
+//     }
+//   }
+// });
+
+
+//takes in the bot token to get the bot online
+client.login(botToken);
