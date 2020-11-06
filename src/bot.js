@@ -122,11 +122,12 @@ client.on('messageReactionAdd', (reaction, user) => { //the reaction param is be
 client.on('messageReactionRemove', (reaction, user) => {  //
   const { name } = reaction.emoji;
   const member = reaction.message.guild.members.cache.get(user.id);
+  let role = reaction.message.guild.roles.cache.find( role => role.name === "test-role");
   console.log("shoulda remove");
   if (reaction.message.id === "774115551127011338") {
     switch (name) {
       case '🐱' : 
-      member.roles.remove("774114942349475850"); 
+      member.roles.remove("774114942349475850"); reaction.message.reply(`The role, ${role}, was removed from ${member}.`);
       break;
     }
   }
