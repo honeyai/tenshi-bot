@@ -34,7 +34,7 @@ client.on("ready", () => {
   console.log(`${client.user.username}, ${client.user.tag} has logged in`);
 });
 
-client.on("message", (message) => {
+client.on("message", async (message) => {
   if (message.author.bot) return;                                       //preventing a bot to reply to itself
 
   console.log(message.author.tag, "sent a message:", message.content);
@@ -90,6 +90,16 @@ client.on("message", (message) => {
       } else {
         message.channel.send(`That member was not found`);
       }
+    } else if (CMD_NAME === 'ban') { //user doesn't have to be in the server. Just has to exist. Errors  on non-existing users.
+      if(!message.member.hasPermission('BAN_MEMBERS')) return message.reply("You don't have permissions to kick users.");
+      if(args.length === 0) return message.reply('Please provide a user');
+
+      try {
+        const user = await message.guild.members.ban(args[0]) //gives a user resolvable => user object, snowflake(id), message, GuildMember
+        message.channel.send('User was banned successfully.');
+      } catch (error) {
+        message.channel.send(`I couldn't do that. Either I don't have permissions or that user doesn't exists.`);
+      } 
     }
   }
 });
