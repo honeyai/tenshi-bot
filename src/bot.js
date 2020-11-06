@@ -22,7 +22,7 @@ const command = require("./commands");
 const PREFIX = require("../envDoesntWork.json").PREFIX;
 
 //to interact with the discord api
-const { Client, WebhookClient } = require("discord.js");
+const { Client, WebhookClient, DiscordAPIError } = require("discord.js");
 const client = new Client({
   partials: ["MESSAGE", "REACTION"],
 });
@@ -56,7 +56,25 @@ client.on("ready", () => {
 
     message.reply(`here are your roles: ${roles}.`);
   });
+
+  command(client, "shh", (message) => {
+    message.channel.send(emoji("774379818434297858"));
+  });
+
+
+  //===== Making the react channel =====
+  // command(client, "reactions", async (message) => {
+  //   let embedded = new Discord.MessageEmbed()
+  //   .setTitle(`Reaction Roles`)
+  //   .setDescription(`React to get roles`)
+  //   .setColor('GREEN') //might be optional
+  //   let embdMsg = await message.channel.send(embedded)
+  //   .embdMsg.react(:Amongus:)
+  // });
 });
 
 //takes in the bot token to get the bot online
 client.login(botToken);
+
+//Making custom emoji roles
+const emoji = id => client.emojis.cache.get(id).toString();

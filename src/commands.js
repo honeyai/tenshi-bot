@@ -20,7 +20,7 @@ module.exports = (client, aliases, callback) => {
     });
 
     if (message.author.bot) return; //preventing a bot to reply to itself
-    
+
     if (
       content === "hello" &&
       message.channel.name === "tenshi_experimentation"
@@ -97,7 +97,7 @@ module.exports = (client, aliases, callback) => {
             `I couldn't do that. Either I don't have permissions or that user doesn't exists.`
           );
         }
-      }
+      }     
     }
 
     client.on("messageReactionAdd", (reaction, user) => {
@@ -112,6 +112,10 @@ module.exports = (client, aliases, callback) => {
         switch (name) {
           case "🐱":
             member.roles.add("774114942349475850");
+            reaction.message.reply(`${member} was given the role ${role}.`);
+            break;
+          case "774379818434297858":
+            member.roles.add("774381041828757534");
             reaction.message.reply(`${member} was given the role ${role}.`);
             break;
         }
@@ -129,6 +133,12 @@ module.exports = (client, aliases, callback) => {
         switch (name) {
           case "🐱":
             member.roles.remove("774114942349475850");
+            reaction.message.reply(
+              `The role, ${role}, was removed from ${member}.`
+            );
+            break;
+          case "774379818434297858" :
+            member.roles.remove("774381041828757534");
             reaction.message.reply(
               `The role, ${role}, was removed from ${member}.`
             );
