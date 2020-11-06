@@ -12,17 +12,20 @@
 
 /*----------  The entry point to the bot  ----------*/
 const botToken = require("../envDoesntWork.json").BOT_TOKEN;
-
+const webhookToken = require("../envDoesntWork.json").WEBHOOK_TOKEN;
+const webhookId = require("../envDoesntWork.json").WEBHOOK_ID;
 //* == NOTE ==
 //Client is a subclass of EventEmitter (extends EventEmitter) => Client extends BaseClient extends EventEmitter
 // - EventEmitter from node: defined and exposed by events module
 //* ===========
 
 //to interact with the discord api
-const { Client } = require("discord.js");
+const { Client, WebhookClient } = require("discord.js");
 const client = new Client({
   partials: ['MESSAGE', 'REACTION']
 });
+
+const webhookClient = new WebhookClient(webhookId, webhookToken); //three params 3rd is optional => id, token, options
 
 const PREFIX = "$";
 
@@ -136,3 +139,13 @@ client.on('messageReactionRemove', (reaction, user) => {  //
 
 //takes in the bot token to get the bot online
 client.login(botToken);
+
+
+/*=============================================
+=                   WEBHOOKS                  =
+=============================================*/
+
+
+
+
+
