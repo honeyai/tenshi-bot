@@ -1,25 +1,40 @@
-const { PREFIX } = require("../envDoesntWork.json");
+const PREFIX = require("../envDoesntWork.json").PREFIX;
 
 //responding to actions taken in discord, ie. delete a message, sending a message, reactions
-module.exports = (clients, aliases, callback) => {
-
-  if(typeof aliases === 'string') {
+module.exports = (client, aliases, callback) => {
+  if (typeof aliases === "string") {
     aliases = [aliases];
   }
 
   //registering an event
 
   client.on("message", async (message) => {
+    const { content } = message;
+
+    aliases.forEach((alias) => {
+      const command = `${PREFIX}${alias}`;
+
+      if (content.startsWith(`${command} `) || content === command) {
+        callback(message);
+      }
+    });
+
     if (message.author.bot) return; //preventing a bot to reply to itself
-
-    console.log(message.author.tag, "sent a message:", message.content); //console.log logs the user and the message
-
+    
     if (
-      message.content === "hello" &&
+      content === "hello" &&
       message.channel.name === "tenshi_experimentation"
     ) {
       message.reply("hello there!"); // if this was "hello", it would infinitely send hello without line 9
     }
+
+    if (
+      content === "what is the prefix" &&
+      message.channel.name === "tenshi_experimentation"
+    ) {
+      message.reply(`It's ${PREFIX}.`);
+    }
+
     if (
       message.author.tag === "guardian_angel#0205" &&
       message.channel.name === "tenshi-experimentation"
@@ -35,7 +50,7 @@ module.exports = (clients, aliases, callback) => {
       message.channel.send(tenshiSayings[randomPhrase]);
     }
 
-    if (message.content.startsWith(PREFIX)) {
+    if (content.startsWith(PREFIX)) {
       /*=============================================
     =            About array destructuring            =
     =============================================*/
@@ -47,17 +62,18 @@ module.exports = (clients, aliases, callback) => {
       /*=====  End of About array destructuring  ======*/
 
       const [CMD_NAME, ...args] = message.content
-        .trim()                   //Trim is for taking away the white space at the start and ends
+        .trim() //Trim is for taking away the white space at the start and ends
         .substring(PREFIX.length) //sub string to get part of the start namely the string after the prefix.
-        .split(/\s+/);            //split to make an array at the white space
-      if (CMD_NAME === "kick") {  //you'll need to give the bot permissions for this
+        .split(/\s+/); //split to make an array at the white space
+      if (CMD_NAME === "kick") {
+        //you'll need to give the bot permissions for this
         if (!message.member.hasPermission("KICK_MEMBERS"))
           return message.reply("You don't have permissions to kick users.");
         if (args.length === 0) return message.reply("Please provide a user");
-        const member = message.guild.members.cache.get(args[0]);      //cache is basically a Collection, contains the 
-                                                                      //snowflakes and GuildMember
-                                                                      //get is a method for a Map because the methods a Collection has
-                                                                      // will store the GuildMember object inside of member
+        const member = message.guild.members.cache.get(args[0]); //cache is basically a Collection, contains the
+        //snowflakes and GuildMember
+        //get is a method for a Map because the methods a Collection has
+        // will store the GuildMember object inside of member
         if (member) {
           member
             .kick()
@@ -66,14 +82,15 @@ module.exports = (clients, aliases, callback) => {
         } else {
           message.channel.send(`That member was not found`);
         }
-      } else if (CMD_NAME === "ban") {  //user doesn't have to be in the server. Just has to exist. Errors on non-existing users.
+      } else if (CMD_NAME === "ban") {
+        //user doesn't have to be in the server. Just has to exist. Errors on non-existing users.
         if (!message.member.hasPermission("BAN_MEMBERS"))
           return message.reply("You don't have permissions to kick users.");
         if (args.length === 0) return message.reply("Please provide a user");
 
         try {
-          const user = await message.guild.members.ban(args[0]);  //gives a user resolvable => user object, snowflake(id), 
-                                                                  //message, GuildMember
+          const user = await message.guild.members.ban(args[0]); //gives a user resolvable => user object, snowflake(id),
+          //message, GuildMember
           message.channel.send("User was banned successfully.");
         } catch (error) {
           message.channel.send(
@@ -82,42 +99,43 @@ module.exports = (clients, aliases, callback) => {
         }
       }
     }
-  });
 
-  client.on("messageReactionAdd", (reaction, user) => {     //the reaction param is being field the Client object
-    // console.log("A reaction was done");
-    const { name } = reaction.emoji;
-    const member = reaction.message.guild.members.cache.get(user.id);
-    let role = reaction.message.guild.roles.cache.find(
-      (role) => role.name === "test-role"
-    );
-    if (reaction.message.id === "774115551127011338") {
-      switch (name) {
-        case "🐱":
-          member.roles.add("774114942349475850");
-          reaction.message.reply(`${member} was given the role ${role}.`);
-          break;
+    client.on("messageReactionAdd", (reaction, user) => {
+      //the reaction param is being field the Client object
+      // console.log("A reaction was done");
+      const { name } = reaction.emoji;
+      const member = reaction.message.guild.members.cache.get(user.id);
+      let role = reaction.message.guild.roles.cache.find(
+        (role) => role.name === "test-role"
+      );
+      if (reaction.message.id === "774115551127011338") {
+        switch (name) {
+          case "🐱":
+            member.roles.add("774114942349475850");
+            reaction.message.reply(`${member} was given the role ${role}.`);
+            break;
+        }
       }
-    }
-  });
+    });
 
-  client.on("messageReactionRemove", (reaction, user) => {
-    // console.log("shoulda remove");
-    const { name } = reaction.emoji;
-    const member = reaction.message.guild.members.cache.get(user.id);
-    let role = reaction.message.guild.roles.cache.find(
-      (role) => role.name === "test-role"
-    );
-    if (reaction.message.id === "774115551127011338") {
-      switch (name) {
-        case "🐱":
-          member.roles.remove("774114942349475850");
-          reaction.message.reply(
-            `The role, ${role}, was removed from ${member}.`
-          );
-          break;
+    client.on("messageReactionRemove", (reaction, user) => {
+      // console.log("shoulda remove");
+      const { name } = reaction.emoji;
+      const member = reaction.message.guild.members.cache.get(user.id);
+      let role = reaction.message.guild.roles.cache.find(
+        (role) => role.name === "test-role"
+      );
+      if (reaction.message.id === "774115551127011338") {
+        switch (name) {
+          case "🐱":
+            member.roles.remove("774114942349475850");
+            reaction.message.reply(
+              `The role, ${role}, was removed from ${member}.`
+            );
+            break;
+        }
       }
-    }
+    });
   });
 };
 
