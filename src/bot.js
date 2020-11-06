@@ -106,29 +106,31 @@ client.on("message", async (message) => {
 });
 
 
-client.on('messageReactionAdd', (reaction, user) => {
+client.on('messageReactionAdd', (reaction, user) => { //the reaction param is being field the Client object
   console.log("A reaction was done");
   const { name } = reaction.emoji;
   const member = reaction.message.guild.members.cache.get(user.id);
+  let role = reaction.message.guild.roles.cache.find( role => role.name === "test-role");
   if (reaction.message.id === "774115551127011338") {
     switch (name) {
-      case '🐱' : member.roles.add("774114942349475850"); 
+      case '🐱' : member.roles.add("774114942349475850"); reaction.message.reply(`${member} was given the role ${role}.`);
       break;
     }
   }
 });
 
-// client.on('messageReactionRemove', (reaction, user) => {
-//   const { name } = reaction.emoji;
-//   const member = reaction.message.guild.members.cache.get(user.id);
-//   if (reaction.message.id === "774115551127011338") {
-//     switch (name) {
-//       case '🐱' : 
-//       member.roles.remove("774114942349475850");
-//       break;
-//     }
-//   }
-// });
+client.on('messageReactionRemove', (reaction, user) => {  //
+  const { name } = reaction.emoji;
+  const member = reaction.message.guild.members.cache.get(user.id);
+  console.log("shoulda remove");
+  if (reaction.message.id === "774115551127011338") {
+    switch (name) {
+      case '🐱' : 
+      member.roles.remove("774114942349475850"); 
+      break;
+    }
+  }
+});
 
 
 //takes in the bot token to get the bot online
