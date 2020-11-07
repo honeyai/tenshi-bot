@@ -22,7 +22,7 @@ const command = require("./commands");
 const PREFIX = require("../envDoesntWork.json").PREFIX;
 
 //to interact with the discord api
-const { Client, WebhookClient, DiscordAPIError } = require("discord.js");
+const { Client, WebhookClient } = require("discord.js");
 const client = new Client({
   partials: ["MESSAGE", "REACTION"],
 });
@@ -44,8 +44,8 @@ client.on("ready", () => {
   });
 
   command(client, ["prefix", "p"], (message) => {
-    message.reply(`My prefix is: ${PREFIX}`)
-  })
+    message.reply(`My prefix is: ${PREFIX}`);
+  });
 
   command(client, ["roles", "r"], (message) => {
     let roles = message.member.roles.cache
@@ -61,6 +61,45 @@ client.on("ready", () => {
     message.channel.send(emoji("774379818434297858"));
   });
 
+  command(client, "ban", async (message) => {
+    const [CMD_NAME, ...args] = message.content
+      .trim()
+      .substring(PREFIX.length)
+      .split(/\s+/);
+
+    if (!message.member.hasPermission("BAN_MEMBERS"))
+      return message.reply("You don't have permissions to kick users.");
+    if (args.length === 0) return message.reply("Please provide a user");
+
+    try {
+      const user = await message.guild.members.ban(args[0]); //gives a user resolvable => user object, snowflake(id),
+      //message, GuildMember
+      message.channel.send("User was banned successfully.");
+    } catch (error) {
+      message.channel.send(
+        `I couldn't do that. Either I don't have permissions or that user doesn't exists.`
+      );
+    }
+  });
+
+  command(client, "kick", (message) => {
+    const [CMD_NAME, ...args] = message.content
+      .trim()
+      .substring(PREFIX.length)
+      .split(/\s+/);
+    if (!message.member.hasPermission("KICK_MEMBERS"))
+      return message.reply("You don't have permissions to kick users.");
+    if (args.length === 0) return message.reply("Please provide a user");
+    const member = message.guild.members.cache.get(args[0]);
+    if (member) {
+      member
+        .kick()
+        .then((member) => message.channel.send(member, "was kicked."))
+        .catch((error) => message.channel.send("I can't kick ", member));
+    } else {
+      message.channel.send(`That member was not found`);
+    }
+  });
 
   //===== Making the react channel =====
   // command(client, "reactions", async (message) => {
@@ -77,4 +116,4 @@ client.on("ready", () => {
 client.login(botToken);
 
 //Making custom emoji roles
-const emoji = id => client.emojis.cache.get(id).toString();
+const emoji = (id) => client.emojis.cache.get(id).toString();
