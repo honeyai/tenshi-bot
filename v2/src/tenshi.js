@@ -52,7 +52,7 @@ client.on("message", (message) => {
           message.member.roles
             .add(roleTag)
             .then((member) =>
-              message.channel.send("You were added to " + roleTag.name + ".")
+              message.channel.send(`You were added to ${roleTag.name}.`)
             )
             .catch((error) => {
               console.error(error);
@@ -83,7 +83,7 @@ client.on("message", (message) => {
             .remove(roleTag)
             .then((member) =>
               message.channel.send(
-                "You were removed from " + roleTag.name + "."
+                `You were removed from ${roleTag.name}.`
               )
             )
             .catch((error) => {
@@ -97,5 +97,20 @@ client.on("message", (message) => {
         message.channel.send("Role not found!");
       }
     });
+  }
+
+  
+  /*----------  Sending a Message in Another Channel  ----------*/
+  if (validateCommand(message, "announce")){
+    let [command, send, ...announce] = message.content.trim().substring(PREFIX.length).split(/\s+/);
+    let toSend = announce.join(" ");
+    //trying to find the of a channel through name
+    let channel = client.channels.cache.find(channel => channel.name.toLowerCase() === send);
+    console.log(channel);
+    if (channel) {
+      channel.send(toSend);
+    } else {
+      message.channel.send(`${send} is not a valid channel.`);
+    }
   }
 });
