@@ -22,10 +22,9 @@ const checkRolePermissions = (role) =>
 client.on("message", (message) => {
   if (message.author.bot) return;
 
-  /*----------  Hello  ----------*/  
+  /*----------  Hello  ----------*/
   if (validateCommand(message, "hello")) message.reply("hello");
 
-  
   /*----------  Dice Roller  ----------*/
   if (validateCommand(message, "rolldice"))
     message.reply("rolled a " + rollDice());
@@ -35,23 +34,20 @@ client.on("message", (message) => {
     let [command, ...args] = message.content
       .toLowerCase()
       .trim()
-      .substring(PREFIX.length) 
-      .split(/\s+/); 
-    console.log("here are the args,", args)
-    console.log("thhis is roleSet,", roleSet)
-
+      .substring(PREFIX.length)
+      .split(/\s+/);
     let roleSet = new Set(args);
     let { cache } = message.guild.roles;
-    
+
     roleSet.forEach((roleName) => {
-      console.log("this is rolenName for each, ", roleName)
       let roleTag = cache.find((role) => role.name.toLowerCase() === roleName);
       if (roleTag) {
         if (message.member.roles.cache.has(roleTag.id)) {
           message.channel.send("You have this role already.");
+          return;
         }
         if (checkRolePermissions(roleTag)) {
-          message.channel.send("You cannot add yourself to this role.");
+          message.channel.send(`You cannot add yourself to ${roleTag.name}.`);
         } else {
           message.member.roles
             .add(roleTag)
@@ -69,17 +65,14 @@ client.on("message", (message) => {
     });
   }
 
-/*----------  Removing a Role  ----------*/
+  /*----------  Removing a Role  ----------*/
   if (validateCommand(message, "remove")) {
     let [command, ...args] = message.content
       .toLowerCase()
-      .trim() 
-      .substring(PREFIX.length) 
+      .trim()
+      .substring(PREFIX.length)
       .split(/\s+/);
     let roleSet = new Set(args);
-    console.log("here are the args,", args)
-
-    console.log("thhis is roleSet,", roleSet)
     let { cache } = message.guild.roles;
 
     roleSet.forEach((roleName) => {
@@ -97,6 +90,8 @@ client.on("message", (message) => {
               console.error(error);
               message.channel.send("Something went wrong...");
             });
+        } else if (!message.member.roles.cache.has(roleTag.id)) {
+          message.channel.send("You don't have this role to remove.");
         }
       } else {
         message.channel.send("Role not found!");
