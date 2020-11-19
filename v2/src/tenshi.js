@@ -49,7 +49,6 @@ client.on("message", (message) => {
       if (roleTag) {
         if (message.member.roles.cache.has(roleTag.id)) {
           message.channel.send("You have this role already.");
-          return;
         }
         if (checkRolePermissions(roleTag)) {
           message.channel.send("You cannot add yourself to this role.");
