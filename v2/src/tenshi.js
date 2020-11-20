@@ -23,7 +23,7 @@ client.on("message", (message) => {
       .split(/\s+/);  
    
   if (client.commands.get(command)) {
-    client.commands.get(command).run(client, message, args);
+    client.commands.get(command)(client, message, args);
   } else {
     console.log("Command doesn't exist");
   }
@@ -40,7 +40,11 @@ client.on("message", (message) => {
       if (file.endsWith(".js")) {
         let cmdName = file.substring(0, file.indexOf(".js"));
         let cmdModule = require(path.join(__dirname, dir, file));
-        client.commands.set(cmdName, cmdModule);
+        let { alias } = cmdModule;
+        client.commands.set(cmdName, cmdModule.run);
+        if(alias.length !== 0) {
+          alias.forEach(alias => client.commands.set(alias, cmdModule.run));
+        }
         // console.log(client.commands);
       }
     }
