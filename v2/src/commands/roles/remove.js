@@ -1,4 +1,5 @@
-module.exports.run = async (client, message, args) => {
+module.exports = {
+  run: async (client, message, args) => {
   let roleSet = new Set(args);
   let { cache } = message.guild.roles;
 
@@ -22,4 +23,6 @@ module.exports.run = async (client, message, args) => {
       message.channel.send("Role not found!");
     }
   });
+},
+  aliases: ['removerole', 'rmrole']
 };
