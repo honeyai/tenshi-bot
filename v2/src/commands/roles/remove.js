@@ -24,6 +24,6 @@ module.exports = {
     }
   });
 },
-  aliases: ['removerole', 'rmrole'],
+  alias: ['removerole', 'rmrole'],
   description: "Remove a role from yourself"
 };

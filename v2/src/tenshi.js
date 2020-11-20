@@ -1,6 +1,8 @@
 const fs = require("fs").promises;
 const path = require("path");
 
+const { checkModule, checkProp } = require("./utils/validate.js");
+
 const discord = require("discord.js");
 const client = new discord.Client();
 const token = require("../../envDoesntWork.json").BOT_TOKEN;
@@ -14,14 +16,14 @@ client.on("ready", () => {
 
 client.on("message", (message) => {
   if (message.author.bot) return;
-  if(!message.content.startsWith(PREFIX)) return;
+  if (!message.content.startsWith(PREFIX)) return;
 
   let [command, ...args] = message.content
-      .toLowerCase()
-      .trim()
-      .substring(PREFIX.length)
-      .split(/\s+/);  
-   
+    .toLowerCase()
+    .trim()
+    .substring(PREFIX.length)
+    .split(/\s+/);
+
   if (client.commands.get(command)) {
     client.commands.get(command)(client, message, args);
   } else {
@@ -39,11 +41,23 @@ client.on("message", (message) => {
     else {
       if (file.endsWith(".js")) {
         let cmdName = file.substring(0, file.indexOf(".js"));
-        let cmdModule = require(path.join(__dirname, dir, file));
-        let { alias } = cmdModule;
-        client.commands.set(cmdName, cmdModule.run);
-        if(alias.length !== 0) {
-          alias.forEach(alias => client.commands.set(alias, cmdModule.run));
+        try {
+          let cmdModule = require(path.join(__dirname, dir, file));
+          if (checkModule(cmdName, cmdModule)) {
+            if (checkProp(cmdName, cmdModule)) {
+              let { alias } = cmdModule;
+              client.commands.set(cmdName, cmdModule.run);
+              if (alias.length !== 0) {
+                alias.forEach((alias) =>
+                  client.commands.set(alias, cmdModule.run)
+                );
+              }
+            } else {
+              throw new Error("")
+            }
+          }
+        } catch (error) {
+          console.error(error);
         }
         // console.log(client.commands);
       }

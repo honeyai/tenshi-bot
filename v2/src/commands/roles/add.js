@@ -35,6 +35,6 @@ module.exports = {
       }
     });
   },
-  aliases: ['addrole', 'roleadd', 'role'],
+  alias: ['addrole', 'roleadd', 'role'],
   description: "Add a role to yourself."
 };
