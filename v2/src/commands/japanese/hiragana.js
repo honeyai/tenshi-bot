@@ -1,5 +1,5 @@
 module.exports.run = async (client, message, args) => {
-  const japaneseChannel = message.channel === '778766867032440852';
+  const japaneseChannel = message.channel.id === '778766867032440852';
   if(!japaneseChannel) {
     try {
       await message.reply('All Japanese commands should be sent to #japanese!!')
@@ -7,6 +7,7 @@ module.exports.run = async (client, message, args) => {
       console.error(e);
     }
   } else {
+    message.channel.send("You are in the right channel.");
     // commands here
       // random - the hiragana
       // random - the romanji
