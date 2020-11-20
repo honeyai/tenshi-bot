@@ -2,7 +2,12 @@ const { MessageCollector } = require("discord.js");
 
 let messageFilter = async (message, original) => {
   let [emojiName, roleName] = original.content.toLowerCase().split(/,\s+/);
-  let { cache } = message.guild.roles;
+  let roleFind = message.guild.roles.cache.find(
+    (role) => role.name === roleName
+  );
+  let emojiFind = message.guild.emojis.cache.find(
+    (emoji) => emoji.name === emojiName
+  );
   //making sure that another message doesn't interfere
   let isSameAuthor = message.author.id === original.author.id ? true : false;
   if (!original.author.bot) {
@@ -13,15 +18,27 @@ let messageFilter = async (message, original) => {
       );
       return false; //don't collect this message
     } else {
-      if (cache.find((role) => role.name === roleName)) {
+      if (roleFind && emojiFind) {
         if (isSameAuthor) {
-          message.channel.send(
-            `You may enter the next role.`
-          );
+          message.channel.send(`You may enter the next role.`);
           return true;
         }
       } else {
-        message.channel.send(`The role, ${roleName}, doesn't exist.\nPlease create this role and try again.`)
+        if (!roleFind) {
+          message.channel
+            .send(
+              `The role, ${roleName}, doesn't exist.\nPlease create this role and try again.`
+            )
+            .then((msg) => msg.delete({ timeout: 3000 }))
+            .catch((error) => console.error);
+        } else {
+          message.channel
+            .send(
+              `The emoji, ${emojiName}, doesn't exist.\nPlease create this emoji or type in the correct emoji name and try again.`
+            )
+            .then((msg) => msg.delete({ timeout: 3000 }))
+            .catch((error) => console.error);
+        }
       }
     }
   }
@@ -48,6 +65,18 @@ module.exports = {
           );
           collector.on("collect", (msg) => {
             console.log(`${msg.content} was collected`);
+            //all the messages that passed the filter will have to be parsed again.
+            let [emojiName, roleName] = msg.content.toLowerCase().split(/,\s+/);
+            let roleFind = msg.guild.roles.cache.find(
+              (role) => role.name === roleName
+            );
+            let emojiFind = msg.guild.emojis.cache.find(
+              (emoji) => emoji.name === emojiName
+            );
+            if (emojiFind && roleFind) {
+              //save to database
+              fetched.react(emojiFind).then(emoji => console.log("reacted with" + emoji + ".")).catch(error => console.error(error));
+            }
           });
         }
       } catch (error) {
