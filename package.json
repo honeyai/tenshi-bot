@@ -20,8 +20,10 @@
   },
   "homepage": "https://github.com/honeyai/tenshi-bot#readme",
   "dependencies": {
+    "ansi-colors": "^4.1.1",
     "discord.js": "^12.4.1",
-    "dotenv": "^8.2.0"
+    "dotenv": "^8.2.0",
+    "table": "^6.0.4"
   },
   "devDependencies": {
     "nodemon": "^2.0.6"

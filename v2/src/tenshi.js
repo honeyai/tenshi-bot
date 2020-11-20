@@ -2,15 +2,23 @@ const fs = require("fs").promises;
 const path = require("path");
 
 const { checkModule, checkProp } = require("./utils/validate.js");
+const { createStream, table } = require("table");
 
+const c = require("ansi-colors");
 const discord = require("discord.js");
 const client = new discord.Client();
 const token = require("../../envDoesntWork.json").BOT_TOKEN;
 const PREFIX = require("../../envDoesntWork.json").PREFIX;
+const tableConfig = require("./utils/tableConfig");
+
+const commandStatus = [
+  [`${c.blueBright.bold("Command")}`, `${c.blueBright.bold("Status")}`],
+];
 
 client.login(token);
 client.commands = new Map();
 client.on("ready", () => {
+  console.log(table(commandStatus));
   console.log("Tenshi has descended from the heavens and has logged in.");
 });
 
@@ -51,13 +59,19 @@ client.on("message", (message) => {
                 alias.forEach((alias) =>
                   client.commands.set(alias, cmdModule.run)
                 );
+                commandStatus.push([
+                  `${c.yellow(`${cmdName}`)}`,
+                  `${c.black.bgCyan.dim("Success")}`,
+                ]);
               }
-            } else {
-              throw new Error("")
             }
           }
         } catch (error) {
           console.error(error);
+          commandStatus.push([
+            `${c.red(`${cmdName}`)}`,
+            `${c.red.bgYellowBright("Failed")}`,
+          ]);
         }
         // console.log(client.commands);
       }
