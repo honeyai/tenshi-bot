@@ -138,3 +138,5 @@ const hiraganaCharacters = {
     hiragana: 'ん',
   },
 }
+
+export default hiraganaCharacters;
