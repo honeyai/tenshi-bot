@@ -1,22 +1,26 @@
 module.exports = {
+  columnDefault: {
+    width: 25
+  },
+  columnCount: 2,
   border: {
-    topBody: `≡`,
-    topJoin: `┬`,
-    topLeft: `┌`,
-    topRight: `┐`,
+    topBody: `═`,
+    topJoin: `╤`,
+    topLeft: `╔`,
+    topRight: `╗`,
 
-    bottomBody: `≡`,
+    bottomBody: `◡`,
     bottomJoin: `┴`,
-    bottomLeft: `└`,
-    bottomRight: `┘`,
+    bottomLeft: `╚`,
+    bottomRight: `╝▋`,
 
-    bodyLeft: `≡`,
-    bodyRight: `│`,
+    bodyLeft: `║`,
+    bodyRight: `║▋`,
     bodyJoin: `│`,
 
-    joinBody: `≡`,
-    joinLeft: `├`,
-    joinRight: `┤`,
+    joinBody: `─`,
+    joinLeft: `╟`,
+    joinRight: `╢▋`,
     joinJoin: `┼`
   }
 };

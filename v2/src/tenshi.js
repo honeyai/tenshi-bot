@@ -18,7 +18,15 @@ const commandStatus = [
 client.login(token);
 client.commands = new Map();
 client.on("ready", () => {
-  console.log(table(commandStatus));
+  let stream = createStream(tableConfig);
+  let i = 0;
+  let fn = setInterval(() => {
+    if(i === commandStatus.length) clearInterval(fn);
+    else {
+      stream.write(commandStatus[i]);
+      i++;
+    }
+  }, 200); 
   console.log("Tenshi has descended from the heavens and has logged in.");
 });
 
