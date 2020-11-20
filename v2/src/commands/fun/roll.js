@@ -1,5 +1,8 @@
 module.exports = {
-  run: async (client, message, args) => {
+  run: async (client, message, args) => { 
+    //potential expansion: 
+    //  - crits (20, 1)
+    //  - if there's no dice given provide options
   let sided;
   let dice = args.find((word) => {
     if (word.startsWith("d")) {
@@ -11,5 +14,6 @@ module.exports = {
   let roll = rollDice();
   message.reply(`Rolling a ${dice}. You rolled a ` + rollDice(), `!`);
 },
-  alias: ['dice', 'rolldice']
+  alias: ['dice', 'rolldice', 'rolla'],
+  description: "Roll a dice of your choosing."
 };
