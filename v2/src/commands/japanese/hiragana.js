@@ -1,6 +1,3 @@
-const alpha = require('../../characters');
-console.log(alpha);
-
 module.exports.run = async (client, message, args) => {
   const japaneseChannel = message.channel === '778766867032440852';
   if(!japaneseChannel) {
