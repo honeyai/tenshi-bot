@@ -31,7 +31,7 @@ client.on("message", (message) => {
 
 (commandRegister = async (dir = "commands") => {
   let files = await fs.readdir(path.join(__dirname, dir));
-  console.log(files);
+  // console.log(files);
 
   for (let file of files) {
     let stat = await fs.lstat(path.join(__dirname, dir, file));
@@ -41,7 +41,7 @@ client.on("message", (message) => {
         let cmdName = file.substring(0, file.indexOf(".js"));
         let cmdModule = require(path.join(__dirname, dir, file));
         client.commands.set(cmdName, cmdModule);
-        console.log(client.commands);
+        // console.log(client.commands);
       }
     }
   }
