@@ -23,6 +23,7 @@
     "ansi-colors": "^4.1.1",
     "discord.js": "^12.4.1",
     "dotenv": "^8.2.0",
+    "mongoose": "^5.10.15",
     "table": "^6.0.4"
   },
   "devDependencies": {

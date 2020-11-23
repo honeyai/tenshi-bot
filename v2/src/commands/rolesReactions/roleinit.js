@@ -1,5 +1,5 @@
 const { MessageCollector } = require("discord.js");
-
+const MessageModel = require("../../database/models/message.js");
 let messageFilter = async (message, original) => {
   let [emojiName, roleName] = original.content.toLowerCase().split(/,\s+/);
   let roleFind = message.guild.roles.cache.find(
@@ -74,8 +74,17 @@ module.exports = {
               (emoji) => emoji.name === emojiName
             );
             if (emojiFind && roleFind) {
-              //save to database
-              fetched.react(emojiFind).then(emoji => console.log("reacted with" + emoji + ".")).catch(error => console.error(error));
+              let stored = new MessageModel({
+                messageId: fetched,
+                emojiRole: { emojiFind: roleFind },
+              })
+                .save()
+                .then((saved) => console.log(saved))
+                .catch((error) => console.error(error));
+              fetched
+                .react(emojiFind)
+                .then((emoji) => console.log("reacted with" + emoji + "."))
+                .catch((error) => console.error(error));
             }
           });
         }

@@ -10,7 +10,7 @@ const client = new discord.Client();
 const token = require("../../envDoesntWork.json").BOT_TOKEN;
 const PREFIX = require("../../envDoesntWork.json").PREFIX;
 const tableConfig = require("./utils/tableConfig");
-
+const db = require("./database/database.js");
 const commandStatus = [
   [`${c.blueBright.bold("Command")}`, `${c.blueBright.bold("Status")}`],
 ];
@@ -21,13 +21,14 @@ client.on("ready", () => {
   let stream = createStream(tableConfig);
   let i = 0;
   let fn = setInterval(() => {
-    if(i === commandStatus.length) clearInterval(fn);
+    if (i === commandStatus.length) clearInterval(fn);
     else {
       stream.write(commandStatus[i]);
       i++;
     }
-  }, 200); 
+  }, 200);
   console.log("Tenshi has descended from the heavens and has logged in.");
+  db.then(() => console.log("Connected to mongo.")).catch(error => console.error(error));
 });
 
 client.on("message", (message) => {
