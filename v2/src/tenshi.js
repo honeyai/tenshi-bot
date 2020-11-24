@@ -1,19 +1,22 @@
 const fs = require("fs").promises;
 const path = require("path");
+const c = require("ansi-colors");
+const discord = require("discord.js");
 
+const client = new discord.Client({partials: ['MESSAGE', 'REACTIONS']});
 const { checkModule, checkProp } = require("./utils/validate.js");
 const { createStream, table } = require("table");
 
-const c = require("ansi-colors");
-const discord = require("discord.js");
-const client = new discord.Client();
 const token = require("../../envDoesntWork.json").BOT_TOKEN;
 const PREFIX = require("../../envDoesntWork.json").PREFIX;
 const tableConfig = require("./utils/tableConfig");
 const db = require("./database/database.js");
+const MessageModel = require("./database/models/message.js");
 const commandStatus = [
   [`${c.blueBright.bold("Command")}`, `${c.blueBright.bold("Status")}`],
 ];
+
+
 
 client.login(token);
 client.commands = new Map();
@@ -30,6 +33,22 @@ client.on("ready", () => {
   console.log("Tenshi has descended from the heavens and has logged in.");
   db.then(() => console.log("Connected to mongo.")).catch(error => console.error(error));
 });
+
+client.on('messageReactionAdd', async (reaction, user) => {
+  if(reaction.message.partial) {
+    let { id } = reaction.message;
+    try {
+      let isStored = MessageModel.findOne({messageId: id});
+      if (isStored) {
+        console.log("Role reaction exists!");
+      } else {
+        
+      }
+    } catch (error) {
+      console.error(error);
+    } 
+  }
+})
 
 client.on("message", (message) => {
   if (message.author.bot) return;
