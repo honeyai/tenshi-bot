@@ -25,8 +25,8 @@ module.exports = {
           );
           let emojiRoleMap = new Map();
           collector.on("collect", (msg) => {
-            if (msg.content.toLowerCase() === 'done') {
-              collector.stop('No longer waiting for roles.');
+            if (msg.content.toLowerCase() === "done") {
+              collector.stop("No longer waiting for roles.");
               return;
             }
             //all the messages that passed the filter will have to be parsed again.
@@ -37,10 +37,13 @@ module.exports = {
             let emojiFind = msg.guild.emojis.cache.find(
               (emoji) => emoji.name === emojiName
             );
-            if (!emojiName || !roleName) message.channel.send(`Please send your message as a pair separated with a coma. \nex. amongus, imposter.`);
+            if (!emojiName || !roleName)
+              message.channel.send(
+                `Please send your message as a pair separated with a coma. \nex. amongus, imposter.`
+              );
             else if (emojiFind && roleFind) {
               message.channel.send(
-                `You may enter the next role. Or send "$done" to complete initialization.`
+                `You may enter the next role. Or send "done" to complete initialization.`
               );
               fetched
                 .react(emojiFind)
@@ -56,15 +59,31 @@ module.exports = {
                 .catch((error) => console.error(error));
             } else if (!emojiFind) {
               message.channel
-              .send(
-                `The emoji, ${emojiName}, doesn't exist.\nPlease create this emoji or type in the correct emoji name and try again.`
-              )
-              .then((msg) => msg.delete({ timeout: 3000 }))
-              .catch((error) => console.error(error));
+                .send(
+                  `The emoji, ${emojiName}, doesn't exist.\nPlease create this emoji or type in the correct emoji name and try again.`
+                )
+                .then((msg) => msg.delete({ timeout: 3000 }))
+                .catch((error) => console.error(error));
             }
           });
-          collector.on("end", (collected, reason) => {
+          collector.on("end", async (collected, reason) => {
             console.log(emojiRoleMap);
+            let findDoc = await MessageModel.findOne({
+              messageId: fetched.id,
+            }).catch(error => console.error(error));
+            if (findDoc) {
+              console.log("This message exists. Not saved.");
+              message.channel.send("You're trying to initialize a message that's already set up.");
+            } else {
+              let msgModal = new MessageModel({
+                messageId: fetched.id,
+                emojiRole: emojiRoleMap,
+              });
+              msgModal
+                .save()
+                .then((something) => console.log(something))
+                .catch((error) => console.error(error));
+            }
           });
         }
       } catch (error) {
