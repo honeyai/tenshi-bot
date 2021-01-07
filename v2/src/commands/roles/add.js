@@ -7,7 +7,10 @@ module.exports = {
       role.permissions.has("MANAGE_CHANNELS") ||
       role.permissions.has("MANAGE_GUILD");
 
-    let roleSet = new Set(args);
+    let role = [args.join(" ")];
+    console.log("role:", role);
+    let roleSet = new Set(role);
+    console.log("roleSet:", roleSet);
     let { cache } = message.guild.roles;
 
     roleSet.forEach((roleName) => {
