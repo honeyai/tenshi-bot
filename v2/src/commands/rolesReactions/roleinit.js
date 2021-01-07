@@ -67,7 +67,7 @@ module.exports = {
             }
           });
           collector.on("end", async (collected, reason) => {
-            console.log(emojiRoleMap);
+            console.log("Done collecting", emojiRoleMap);
             let findDoc = await MessageModel.findOne({
               messageId: fetched.id,
             }).catch(error => console.error(error));
@@ -75,13 +75,13 @@ module.exports = {
               console.log("This message exists. Not saved.");
               message.channel.send("You're trying to initialize a message that's already set up.");
             } else {
-              let msgModal = new MessageModel({
+              let msgModel = new MessageModel({
                 messageId: fetched.id,
                 emojiRole: emojiRoleMap,
               });
-              msgModal
+              msgModel
                 .save()
-                .then((something) => console.log(something))
+                .then() //(something) => console.log(something)
                 .catch((error) => console.error(error));
             }
           });

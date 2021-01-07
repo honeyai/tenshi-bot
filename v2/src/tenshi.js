@@ -3,7 +3,7 @@ const path = require("path");
 const c = require("ansi-colors");
 const discord = require("discord.js");
 
-const client = new discord.Client({partials: ['MESSAGE', 'REACTIONS']});
+const client = new discord.Client({ partials: ["MESSAGE", "REACTION"] });
 const { checkModule, checkProp } = require("./utils/validate.js");
 const { createStream, table } = require("table");
 
@@ -12,14 +12,19 @@ const PREFIX = require("../../envDoesntWork.json").PREFIX;
 const tableConfig = require("./utils/tableConfig");
 const db = require("./database/database.js");
 const MessageModel = require("./database/models/message.js");
+const { find } = require("./database/models/message.js");
 const commandStatus = [
   [`${c.blueBright.bold("Command")}`, `${c.blueBright.bold("Status")}`],
 ];
 
-
+const cachedReactions = new Map();
 
 client.login(token);
 client.commands = new Map();
+
+//================================================
+//For the terminal visualization of command status
+//================================================
 client.on("ready", () => {
   let stream = createStream(tableConfig);
   let i = 0;
@@ -31,24 +36,18 @@ client.on("ready", () => {
     }
   }, 200);
   console.log("Tenshi has descended from the heavens and has logged in.");
-  db.then(() => console.log("Connected to mongo.")).catch(error => console.error(error));
+  db.then(() => console.log("Connected to mongo.")).catch((error) =>
+    console.error(error)
+  );
 });
 
-client.on('messageReactionAdd', async (reaction, user) => {
+client.on("messageReactionAdd", async (reaction, user) => {
   if(reaction.message.partial) {
-    let { id } = reaction.message;
-    try {
-      let isStored = MessageModel.findOne({messageId: id});
-      if (isStored) {
-        console.log("Role reaction exists!");
-      } else {
-        
-      }
-    } catch (error) {
-      console.error(error);
-    } 
+    console.log("Message is a partial");
+  } else {
+    console.log("Message is not a partial", reaction.message.partial.id);
   }
-})
+});
 
 client.on("message", (message) => {
   if (message.author.bot) return;
@@ -66,6 +65,10 @@ client.on("message", (message) => {
     console.log("Command doesn't exist");
   }
 });
+
+//===================================================================
+//Registering filenames as command keyword and allowing for aliases
+//===================================================================
 
 (commandRegister = async (dir = "commands") => {
   let files = await fs.readdir(path.join(__dirname, dir));
@@ -101,7 +104,6 @@ client.on("message", (message) => {
             `${c.red.bgYellowBright("Failed")}`,
           ]);
         }
-        // console.log(client.commands);
       }
     }
   }
