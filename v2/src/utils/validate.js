@@ -17,3 +17,19 @@ module.exports.checkProp = (cmdName, cmdModule) => {
     throw new Error(`${cmdName}.alias is not an string.`);
   return true;
 };
+
+module.exports.checkEventModule = (eventName, eventModule) => {
+  if (!eventModule.hasOwnProperty("run"))
+    throw new Error(`${eventName} doesn't have the run property.`);
+  if (!eventModule.hasOwnProperty(`description`))
+    throw new Error(`${eventName} doesn't have the description property.`);
+  return true;
+};
+
+module.exports.checkEventProp = (eventName, eventModule) => {
+  if (typeof eventModule.run !== "function")
+    throw new Error(`${eventName}.run is not a function.`);
+  if (typeof eventModule.description !== "string")
+    throw new Error(`${eventName}.alias is not an string.`);
+  return true;
+};
