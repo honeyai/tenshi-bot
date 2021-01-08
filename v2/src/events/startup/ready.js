@@ -8,7 +8,6 @@ const { commandStatus } = require("../../tenshi");
 
 module.exports = {
   run: async (client) => {
-    console.log("commandStatus:", commandStatus);
     let stream = createStream(tableConfig);
     let i = 0;
     let fn = setInterval(() => {
