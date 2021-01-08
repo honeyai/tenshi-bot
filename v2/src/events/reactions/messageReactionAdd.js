@@ -42,9 +42,7 @@ module.exports = {
         }
         //otherwise cache it then add
         else {
-          console.log("Caching now");
           let role = msgDoc.emojiRole[reaction.emoji.id];
-          console.log("cached", role);
           cachedReactions.set(id, role);
           addRole(role);
         }

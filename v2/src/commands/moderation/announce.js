@@ -4,7 +4,6 @@ module.exports = {
   run: async (client, message, args) => {
     let toSend = args.splice(1); //channel
     let send = args.join(" "); //message to send
-    console.log(args, send);
     let { id } = await message.guild.channels.cache.find(
       (channel) => channel.name === send
     );
