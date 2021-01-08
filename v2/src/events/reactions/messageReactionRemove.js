@@ -14,9 +14,7 @@ module.exports = {
     console.log("This is roleID:", roleId);
     let role = reaction.message.guild.roles.cache.get(roleId);
     let member = reaction.message.guild.members.cache.get(user.id);
-  
-    console.log("Heard the removal of:", reaction.emoji.name);
-  
+    
     if (member.roles.cache.has(roleId)) {
       member.roles
         .remove(role)
