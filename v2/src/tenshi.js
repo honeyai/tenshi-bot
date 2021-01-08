@@ -13,7 +13,6 @@ const {
 
 const token = require("../../envDoesntWork.json").BOT_TOKEN;
 const MessageModel = require("./database/models/message.js");
-const { find } = require("./database/models/message.js");
 
 const commandStatus = [
   [`${c.blueBright.bold("Command")}`, `${c.blueBright.bold("Status")}`],
