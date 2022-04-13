@@ -28,11 +28,6 @@ module.exports = {
       } catch (e) {
         console.error(e);
       }
-
-      //once the message is sent 
-      // send to the channel: "The wheel is spinning..."
-      // You'll be playing AGENTNAME
-      //bonus: picture
     }
   },
   alias: ["rollA", "agent"],

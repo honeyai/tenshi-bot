@@ -1,9 +1,7 @@
 const agents = module.exports = [{
   name: "Astra",
-  color: "",
   color: "9726a6",
-  color: "",
-  image: ""
+  image: "https://static.wikia.nocookie.net/valorant/images/8/8a/Astra_artwork.png/revision/latest?cb=20210302170140"
 },
 {
   name: "Breach",

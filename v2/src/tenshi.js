@@ -14,6 +14,8 @@ const {
 const token = require("../../envDoesntWork.json").BOT_TOKEN;
 const MessageModel = require("./database/models/message.js");
 const agents = require("./data/agents.js");
+const primary = require("./data/primary.js");
+const secondary = require("./data/secondary.js");
 
 const commandStatus = [
   [`${c.blueBright.bold("Command")}`, `${c.blueBright.bold("Status")}`],
@@ -26,6 +28,8 @@ module.exports = {
   cachedReactions,
   commandStatus,
   agents,
+  primary,
+  secondary,
 };
 
 client
