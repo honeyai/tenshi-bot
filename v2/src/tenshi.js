@@ -13,6 +13,7 @@ const {
 
 const token = require("../../envDoesntWork.json").BOT_TOKEN;
 const MessageModel = require("./database/models/message.js");
+const agents = require("./data/agents.js");
 
 const commandStatus = [
   [`${c.blueBright.bold("Command")}`, `${c.blueBright.bold("Status")}`],
@@ -23,8 +24,9 @@ const cachedReactions = new Map();
 module.exports = {
   MessageModel,
   cachedReactions,
-  commandStatus
-}; 
+  commandStatus,
+  agents,
+};
 
 client
   .login(token)
@@ -91,6 +93,7 @@ client.commands = new Map();
           if (checkEventModule(eventName, eventModule)) {
             if (checkEventProp(eventName, eventModule)) {
               client.commands.set(eventName, eventModule.run);
+              console.log(client.commands);
               commandStatus.push([
                 `${c.yellow(`${eventName}`)}`,
                 `${c.black.bgCyan.dim("Success")}`,
