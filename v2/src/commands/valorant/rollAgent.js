@@ -23,7 +23,7 @@ module.exports = {
           .setTitle(selectedAgent.name)
           .setColor(selectedAgent.color)
           .setImage(selectedAgent.image)
-        message.reply(`you will be playing`);
+        message.reply(`you will be playing ${selectedAgent.name}.`);
         message.channel.send(emb);
       } catch (e) {
         console.error(e);
